@@ -4,5 +4,7 @@ Rails.application.routes.draw do
   get 'hello', to: 'hello#hello'
   get 'persons/main', as: 'user_root'
 
+  resource :payments
+
   root 'application#index'
 end
