@@ -1,17 +1,25 @@
 class ApplicationController < ActionController::Base
 
+  def after_inactive_sign_up_path_for(resource)
+    @registerd = true
+    render 'index'
+  end
+
   def after_sign_in_path_for(resource)
-    current_user_path
+    # redirect to main page
+    render 'index'
   end
 
   def after_sign_out_path_for(resource_or_scope)
-    request.referrer
+    '/users/sign_in'
   end
 
   def index
-    # TODO check if user is logged in. If not, then redirect to login page.
+    if !user_signed_in?
+      return redirect_to '/users/sign_up'
+    end
 
-    render html: "TODO redirects..."
+    return render 'index'
   end
 
 
