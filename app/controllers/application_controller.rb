@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
 
   def after_sign_in_path_for(resource)
     # redirect to main page
-    render 'index'
+    '/'
   end
 
   def after_sign_out_path_for(resource_or_scope)

@@ -10,9 +10,17 @@
         <a class="nav-link" href="#">Main page <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <%= link_to 'Payments', payments, class: "nav-link" %>
+        <%= link_to 'Payments', payments_path, class: "nav-link" %>
       </li>
     </ul>
+
+    <div class="navbar-nav navbar-collapse">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <%= link_to "Logout(#{ current_user.email })", destroy_user_session_path, method: 'delete', class: "nav-link" %>
+        </li>
+      </ul>
+    </div>
 <!-- TODO user logout-->
   </div>
 </nav>
