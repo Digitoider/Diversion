@@ -7,9 +7,9 @@
   <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
 
     <div class="form-group row justify-content-md-center">
-      <%= f.label :Email, class: "col-sm-2 col-form-label" %>
+      <%= f.label :Login, class: "col-sm-2 col-form-label" %>
       <div class="col-sm-5">
-        <%= f.text_field :email,
+        <%= f.text_field :login,
                          autofocus: true,
                          autocomplete: "off",
                          placeholder: "Login or Email",

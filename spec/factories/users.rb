@@ -3,7 +3,7 @@
 FactoryGirl.define do
   factory :user, :class => User do
   # factory :user do
-    login 'Alex'
+    username 'Alex'
     email 'alex@m.com'
     password '1111'
   end

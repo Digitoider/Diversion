@@ -7,9 +7,9 @@ require 'rails_helper'
 describe User do
 
   context 'login validations' do
-    it { should validate_presence_of(:login) }
-    it { should validate_length_of(:login).is_at_least(3) }
-    it { should validate_uniqueness_of(:login) }
+    it { should validate_presence_of(:username) }
+    it { should validate_length_of(:username).is_at_least(3) }
+    it { should validate_uniqueness_of(:username) }
   end
 
   context 'email validations' do
