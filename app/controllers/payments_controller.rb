@@ -43,7 +43,9 @@ class PaymentsController < ApplicationController
       return redirect_to payments_path, alert:  "Payment can't be saved for unknown fucking reason!"
     end
 
-    redirect_to payments_path, notice:  "Payment was successfully created!"
+    # redirect_to payments_path, notice:  "Payment was successfully created!"
+
+    redirect_back fallback_location: { action: "index"}, notice: "Payment was successfully created!"
   end
 
   # PATCH/PUT /payments/1
@@ -65,7 +67,7 @@ class PaymentsController < ApplicationController
   def destroy
     @payment.destroy
     respond_to do |format|
-      format.html { redirect_to payments_url, notice: 'Payment was successfully destroyed.' }
+      format.html { redirect_back fallback_location: { action: "index"}, notice: 'Payment was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
