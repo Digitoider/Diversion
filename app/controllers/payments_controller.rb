@@ -10,8 +10,8 @@ class PaymentsController < ApplicationController
 
   # GET /payments/1
   # GET /payments/1.json
-  def show
-  end
+  # def show
+  # end
 
   # GET /payments/new
   def new
@@ -19,12 +19,9 @@ class PaymentsController < ApplicationController
     create
   end
 
-
-
-
   # GET /payments/1/edit
-  def edit
-  end
+  # def edit
+  # end
 
   # POST /payments
   # POST /payments.json
@@ -50,17 +47,17 @@ class PaymentsController < ApplicationController
 
   # PATCH/PUT /payments/1
   # PATCH/PUT /payments/1.json
-  def update
-    respond_to do |format|
-      if @payment.update(payment_params)
-        format.html { redirect_to @payment, notice: 'Payment was successfully updated.' }
-        format.json { render :show, status: :ok, location: @payment }
-      else
-        format.html { render :edit }
-        format.json { render json: @payment.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  # def update
+  #   respond_to do |format|
+  #     if @payment.update(payment_params)
+  #       format.html { redirect_to @payment, notice: 'Payment was successfully updated.' }
+  #       format.json { render :show, status: :ok, location: @payment }
+  #     else
+  #       format.html { render :edit }
+  #       format.json { render json: @payment.errors, status: :unprocessable_entity }
+  #     end
+  #   end
+  # end
 
   # DELETE /payments/1
   # DELETE /payments/1.json
