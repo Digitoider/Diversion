@@ -5,7 +5,7 @@ class PaymentsController < ApplicationController
   # GET /payments
   # GET /payments.json
   def index
-    @payments = Payment.all
+    @payments = Payment.order(ends_at: :asc)
   end
 
   # GET /payments/1
@@ -42,9 +42,6 @@ class PaymentsController < ApplicationController
     if !@payment.save!
       return redirect_to payments_path, alert:  "Payment can't be saved for unknown fucking reason!"
     end
-
-    # TODO Notify user that the payment was successfully created.
-    # TODO Redirect to /payments page.
 
     redirect_to payments_path, notice:  "Payment was successfully created!"
   end
