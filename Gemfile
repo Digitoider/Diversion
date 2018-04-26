@@ -47,7 +47,7 @@ gem 'bootstrap', '~> 4.1.0'
 
 gem 'devise'
 
-
+gem 'kaminari'
 
 group :development, :test do
   gem 'factory_girl_rails'

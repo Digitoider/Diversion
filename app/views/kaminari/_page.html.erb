@@ -1,0 +1,16 @@
+<%# Link showing page number
+  - available local variables
+    page:          a page object for "this" page
+    url:           url to this page
+    current_page:  a page object for the currently displayed page
+    total_pages:   total number of pages
+    per_page:      number of items to fetch per page
+    remote:        data-remote
+-%>
+<li class="page-item <%= ' active' if page.current? %>">
+  <% if page.current? %>
+      <a class="page-link" href="#"><%= page %> <span class="sr-only">(current)</span></a>
+  <% else %>
+      <a class="page-link" href="<%= url %>"><%= page %></a>
+  <% end %>
+</li>
