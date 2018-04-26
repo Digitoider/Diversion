@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class PaymentsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_payment, only: [:show, :edit, :update, :destroy]
+  before_action :set_payment, only: %i[show edit update destroy]
 
   # GET /payments
   # GET /payments.json
@@ -27,7 +29,7 @@ class PaymentsController < ApplicationController
   # POST /payments.json
   def create
     @payment = Payment.new
-    last_datetime  = Payment.maximum('ends_at')
+    last_datetime = Payment.maximum('ends_at')
 
     next_payment_datetime = form_next_payment_datetime(last_datetime)
 
@@ -36,13 +38,11 @@ class PaymentsController < ApplicationController
 
     @payment.user = current_user
 
-    if !@payment.save!
-      return redirect_to payments_path, alert:  "Payment can't be saved for unknown fucking reason!"
+    unless @payment.save!
+      return redirect_to payments_path, alert: "Payment can't be saved for unknown fucking reason!"
     end
 
-    # redirect_to payments_path, notice:  "Payment was successfully created!"
-
-    redirect_back fallback_location: { action: "index"}, notice: "Payment was successfully created!"
+    redirect_back fallback_location: { action: 'index' }, notice: 'Payment was successfully created!'
   end
 
   # PATCH/PUT /payments/1
@@ -64,53 +64,54 @@ class PaymentsController < ApplicationController
   def destroy
     @payment.destroy
     respond_to do |format|
-      format.html { redirect_back fallback_location: { action: "index"}, notice: 'Payment was successfully destroyed.' }
+      format.html { redirect_back fallback_location: { action: 'index' }, notice: 'Payment was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_payment
-      @payment = Payment.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def payment_params
-      params.require(:payment).permit(:starts_at, :ends_at, :user_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_payment
+    @payment = Payment.find(params[:id])
+  end
 
-    def form_next_payment_datetime(last_datetime)
-      allowed_datetimes = form_allowed_datetimes(last_datetime)
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def payment_params
+    params.require(:payment).permit(:starts_at, :ends_at, :user_id)
+  end
 
-      next_payment_datetime = nil
+  def form_next_payment_datetime(last_datetime)
+    allowed_datetimes = form_allowed_datetimes(last_datetime)
 
-      for datetime in allowed_datetimes
-        if(datetime > last_datetime)
-          next_payment_datetime = datetime
-          break
-        end
+    next_payment_datetime = nil
+
+    allowed_datetimes.each do |datetime|
+      if datetime > last_datetime
+        next_payment_datetime = datetime
+        break
       end
-
-      return next_payment_datetime
     end
 
-    def form_allowed_datetimes(last_datetime)
-      allowed_datetimes = []
+    next_payment_datetime
+  end
 
-      first_payment_day = Rails.configuration.x.payment.first_day
-      second_payment_day = Rails.configuration.x.payment.second_day
+  def form_allowed_datetimes(last_datetime)
+    allowed_datetimes = []
 
-      temp_datetime = last_datetime
+    first_payment_day = Rails.configuration.x.payment.first_day
+    second_payment_day = Rails.configuration.x.payment.second_day
 
-      allowed_datetimes.push DateTime.new(temp_datetime.year, temp_datetime.month, first_payment_day)
-      allowed_datetimes.push DateTime.new(temp_datetime.year, temp_datetime.month, second_payment_day)
+    temp_datetime = last_datetime
 
-      temp_datetime += 1.month
+    allowed_datetimes.push DateTime.new(temp_datetime.year, temp_datetime.month, first_payment_day)
+    allowed_datetimes.push DateTime.new(temp_datetime.year, temp_datetime.month, second_payment_day)
 
-      allowed_datetimes.push DateTime.new(temp_datetime.year, temp_datetime.month, first_payment_day)
-      allowed_datetimes.push DateTime.new(temp_datetime.year, temp_datetime.month, second_payment_day)
+    temp_datetime += 1.month
 
-      return allowed_datetimes
-    end
+    allowed_datetimes.push DateTime.new(temp_datetime.year, temp_datetime.month, first_payment_day)
+    allowed_datetimes.push DateTime.new(temp_datetime.year, temp_datetime.month, second_payment_day)
+
+    allowed_datetimes
+  end
 end
