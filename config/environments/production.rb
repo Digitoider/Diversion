@@ -91,4 +91,10 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+
+  # Setup a start_at and ends_at parameter for Payment
+  config.x.payment.first_day = 5
+  config.x.payment.second_day = 20
+
 end

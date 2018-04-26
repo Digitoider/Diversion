@@ -1,5 +1,7 @@
 class User < ApplicationRecord
 
+  has_many :payments
+
   attr_accessor :login
 
   def login=(login)

@@ -60,4 +60,8 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+
+  # Setup a start_at and ends_at parameter for Payment
+  config.x.payment.first_day = 5
+  config.x.payment.second_day = 20
 end

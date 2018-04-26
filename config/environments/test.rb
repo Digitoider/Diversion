@@ -43,4 +43,8 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  # Setup a start_at and ends_at parameter for Payment
+  config.x.payment.first_day = 5
+  config.x.payment.second_day = 20
 end

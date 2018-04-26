@@ -1,4 +1,5 @@
 class PaymentsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_payment, only: [:show, :edit, :update, :destroy]
 
   # GET /payments
@@ -14,8 +15,12 @@ class PaymentsController < ApplicationController
 
   # GET /payments/new
   def new
-    @payment = Payment.new
+    # redirect_to action: 'create'
+    create
   end
+
+
+
 
   # GET /payments/1/edit
   def edit
@@ -24,17 +29,24 @@ class PaymentsController < ApplicationController
   # POST /payments
   # POST /payments.json
   def create
-    @payment = Payment.new(payment_params)
+    @payment = Payment.new
+    last_datetime  = Payment.maximum('ends_at')
 
-    respond_to do |format|
-      if @payment.save
-        format.html { redirect_to @payment, notice: 'Payment was successfully created.' }
-        format.json { render :show, status: :created, location: @payment }
-      else
-        format.html { render :new }
-        format.json { render json: @payment.errors, status: :unprocessable_entity }
-      end
+    next_payment_datetime = form_next_payment_datetime(last_datetime)
+
+    @payment.starts_at = next_payment_datetime
+    @payment.ends_at = form_next_payment_datetime(next_payment_datetime) - 1.day
+
+    @payment.user = current_user
+
+    if !@payment.save!
+      return redirect_to payments_path, alert:  "Payment can't be saved for unknown fucking reason!"
     end
+
+    # TODO Notify user that the payment was successfully created.
+    # TODO Redirect to /payments page.
+
+    redirect_to payments_path, notice:  "Payment was successfully created!"
   end
 
   # PATCH/PUT /payments/1
@@ -70,5 +82,39 @@ class PaymentsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def payment_params
       params.require(:payment).permit(:starts_at, :ends_at, :user_id)
+    end
+
+    def form_next_payment_datetime(last_datetime)
+      allowed_datetimes = form_allowed_datetimes(last_datetime)
+
+      next_payment_datetime = nil
+
+      for datetime in allowed_datetimes
+        if(datetime > last_datetime)
+          next_payment_datetime = datetime
+          break
+        end
+      end
+
+      return next_payment_datetime
+    end
+
+    def form_allowed_datetimes(last_datetime)
+      allowed_datetimes = []
+
+      first_payment_day = Rails.configuration.x.payment.first_day
+      second_payment_day = Rails.configuration.x.payment.second_day
+
+      temp_datetime = last_datetime
+
+      allowed_datetimes.push DateTime.new(temp_datetime.year, temp_datetime.month, first_payment_day)
+      allowed_datetimes.push DateTime.new(temp_datetime.year, temp_datetime.month, second_payment_day)
+
+      temp_datetime += 1.month
+
+      allowed_datetimes.push DateTime.new(temp_datetime.year, temp_datetime.month, first_payment_day)
+      allowed_datetimes.push DateTime.new(temp_datetime.year, temp_datetime.month, second_payment_day)
+
+      return allowed_datetimes
     end
 end
